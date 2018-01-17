@@ -1,0 +1,9 @@
+---
+hide_body: false
+fields:
+- type: text
+  default: Description
+- type: datetime
+  default: 2018-01-17 00:00:00 +0530
+  label: created date
+  name: created_date
