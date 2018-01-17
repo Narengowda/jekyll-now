@@ -1,6 +1,6 @@
 ---
 pages:
-- _posts/it-took-time-to-figure-out-pool-size-configuration-in-sqlalchemy.md
+- _posts/2018-01-17-it-took-time-to-figure-out-pool-size-configuration-in-sqlalchemy.md
 - _posts/2018-01-17-two-ways-to-kill-processes-of-a-kind.md
 - _posts/2018-01-17-collection-of-python-tricks-for-faster-and-better-coding.md
 hide_body: false
