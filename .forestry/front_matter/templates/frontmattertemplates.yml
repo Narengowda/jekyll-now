@@ -1,0 +1,8 @@
+---
+hide_body: false
+fields:
+- type: textarea
+  default: This is default value to FrontMatterTemplate
+  label: label
+  name: name
+  description: default description
