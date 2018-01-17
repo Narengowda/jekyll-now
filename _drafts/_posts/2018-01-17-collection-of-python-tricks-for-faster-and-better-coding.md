@@ -4,9 +4,10 @@ undefined: python questions for learning the hardway
 created_date: 2018-01-17 00:00:00 +0530
 date: 2018-01-17 21:51:01 +0000
 ---
+Here are some of the Python tricks and tips which helps you to write better code.
+
 Monkey patch a object/class
 
-    
     class Foo(object):
         def __init__(self, arg1, arg2, **kwargs):
             #do stuff with arg1 and arg2
@@ -23,7 +24,6 @@ Chaining comparision operator
     
     # This is equal to
     >>> (1 < x) and (x < 10)
-    
 
 Set operations
 
@@ -42,7 +42,6 @@ Set operations
     {1, 2}
     >>> a ^ b # Symmetric Difference
     {1, 2, 5, 6}
-    
 
 Create objects at run time !!
 
@@ -60,7 +59,7 @@ Create objects at run time !!
 
 Writing descriptors
 
-The following code creates a class whose objects are data descriptors which print a message for each get or set. Overriding __getattribute__ is alternate approach that could do this for every attribute. However, this descriptor is useful for monitoring just a few chosen attributes:
+The following code creates a class whose objects are data descriptors which print a message for each get or set. Overriding **getattribute** is alternate approach that could do this for every attribute. However, this descriptor is useful for monitoring just a few chosen attributes:
 
     class RevealAccess(object):
         """A data descriptor that sets and returns values
@@ -112,7 +111,6 @@ Comprehensions
 
 Ternary operator
 
-    
     >>> y = 1
     >>> x = 3 if (y == 1) else 2
     >>> x
@@ -129,21 +127,18 @@ This functionality will be usefull in webapp to accept get/post true/false param
     True
     >>> json.loads('false')
     False
-    
 
 Debug a function from console
 
     >>> import pdb
     >>> import mymodule
     >>> pdb.run('mymodule.test()')
-    
 
 List of list flattening
 
     >>> l = [[1, 2, 3], [4, 5], [6], [7, 8, 9]]
     >>> sum(l, [])
     [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    
 
 Quick benchmark your code
 
