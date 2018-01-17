@@ -4,8 +4,6 @@ undefined: Description
 created_date: 2018-01-17 00:00:00 +0530
 date: 2018-01-17 23:10:46 +0000
 ---
-### Problem Statement
-
 There has been a surge in crimes committed in recent years, making crime a top cause of concern for law enforcement. If we are able to estimate whether someone is going to commit a crime in the future, we can take precautions and be prepared. You are given a dataset containing answers to various questions concerning the professional and private lives of several people. A few of them have been arrested for various small and large crimes in the past. Use the given data to predict if the people in the test data will commit a crime. The train data consists of 45718 rows, while the test data consists of 11430 rows.
 
 The evaluation metric is precision score.
@@ -19,7 +17,6 @@ Here is how this problem can be solved using SVM
     import matplotlib.pyplot as plt
     df = pd.read_csv('./e_criminal/criminal_train.csv')
     df.head()
-    
 
 |  | PERID | IFATHER | NRCH17_2 | IRHHSIZ2 | IIHHSIZ2 | IRKI17_2 | IIKI17_2 | IRHH65_2 | IIHH65_2 | PRXRETRY | ... | TOOLONG | TROUBUND | PDEN10 | COUTYP2 | MAIIN102 | AIIND102 | ANALWT_C | VESTR | VEREP | Criminal |
 | 0 | 25095143 | 4 | 2 | 4 | 1 | 3 | 1 | 1 | 1 | 99 | ... | 1 | 2 | 1 | 1 | 2 | 2 | 3884.805998 | 40026 | 1 | 0 |
@@ -36,9 +33,9 @@ Here is how this problem can be solved using SVM
     Y = np.ravel(Y)
     Y.shape
     
-
+    
     (45718,)
-
+    
     # Feature Selection
     
     # Recursive Feature Elimination (RFE) is based on the idea to repeatedly
@@ -56,7 +53,7 @@ Here is how this problem can be solved using SVM
     print(rfe.support_)
     print(rfe.ranking_)
     
-
+    
     [False  True False  True False  True False False False False False False
      False False False False  True False False False False False False False
      False False False False  True False  True False  True False False False
@@ -67,7 +64,7 @@ Here is how this problem can be solved using SVM
      17 33 48  1 44  1 41  1 50  6  4  9 12 14 34 49  1 32 52  1 40 19 47  1 39
       1 46  1 45 22  1  1  1 43 42  1  1  8  7 31 30 10  1 27 26 29]
     
-
+    
     # Normalize the data
     from sklearn import preprocessing
     x = df.values #returns a numpy array
@@ -76,7 +73,7 @@ Here is how this problem can be solved using SVM
     x_scaled = min_max_scaler.fit_transform(x)
     X = pd.DataFrame(x_scaled)
     
-
+    
     X = X[[column for consider, column in zip(rfe.support_, X.columns) if consider]]
     
     from sklearn.cross_validation import train_test_split
@@ -93,7 +90,7 @@ Here is how this problem can be solved using SVM
     svc = svm.SVC(kernel='linear', C=C, decision_function_shape='ovr').fit(X_train, y_train)
     y_pred = svc.predict(X_test)
     
-
+    
     from sklearn.metrics import confusion_matrix, f1_score
     confusion = confusion_matrix(y_test, y_pred)
     #print(confusion)
@@ -109,9 +106,8 @@ Here is how this problem can be solved using SVM
     score = f1_score(y_test, y_pred)
     print score
     
-
+    
     ========== Criminal prediction output ============
     Correct predictions =  12724
     INCorrect predictions =  992
     0.0
-    
