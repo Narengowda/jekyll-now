@@ -1,6 +1,7 @@
 ---
 title: It took time to figure out pool size configuration in SQLalchemy
-undefined: Description
+undefined: Pool size in sqlalchmey can be configured while creating engine, or if
+  you are encountering below errors ?
 created_date: 2018-01-17 00:00:00 +0530
 date: 2018-01-17 22:00:52 +0000
 ---
