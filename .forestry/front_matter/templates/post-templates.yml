@@ -1,4 +1,6 @@
 ---
+pages:
+- _posts/collection-of-python-tricks-for-faster-and-better-coding.md
 hide_body: false
 fields:
 - type: text
