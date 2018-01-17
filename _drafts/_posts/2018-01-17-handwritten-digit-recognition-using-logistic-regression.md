@@ -1,12 +1,14 @@
 ---
 title: Handwritten digit recognition using Logistic regression
-undefined: Description
+undefined: handwritten-digit-recognition-using-logistic-regression
 created_date: 2018-01-17 00:00:00 +0530
 date: 2018-01-17 23:44:09 +0000
 ---
+Lets use data digits dataset provided in python library, sklearn
+
 ![](/uploads/2018/01/17/1_1TkgO9Zz6rC3KpAYNl5KfA.png)
 
-Lets use data digits dataset provided in python library, sklearn
+as you can see some sample digits
 
     %matplotlib inline
     from sklearn.datasets import load_digits
