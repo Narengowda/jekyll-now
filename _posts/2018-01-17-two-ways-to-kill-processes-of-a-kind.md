@@ -1,6 +1,8 @@
 ---
 title: Two ways to kill processes of a kind
-undefined: Description
+undefined: 'Handy solution to grep and kill process by process name.  When Celery
+  workers are not properly shutdown their will be background celery workers running
+  and they needs to be killed. Eg:'
 created_date: 2018-01-17 00:00:00 +0530
 date: 2018-01-17 21:58:55 +0000
 ---
