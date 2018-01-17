@@ -1,100 +1,95 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>You're up and running! – Narendra L – Python Developer from Bengaluru</title>
+<p>We often log like below mentioned code snippet, but there is a better way to do it !!</p>
 
-        <meta charset="utf-8" />
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import logging
+import logging.handlers
 
-    
-    <meta name="description" content="Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).
+LOG_FILENAME = 'testing.log'
 
-" />
-    <meta property="og:description" content="Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).
+# Set up a specific logger with our desired output level
+my_logger = logging.getLogger('agentlogger')
 
-" />
-    
-    <meta name="author" content="Narendra L" />
+# Add the log message handler to the logger
+handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=2000, backupCount=100)
 
-    
-    <meta property="og:title" content="You're up and running!" />
-    <meta property="twitter:title" content="You're up and running!" />
-    
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
 
-    <!--[if lt IE 9]>
-      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+my_logger.addHandler(handler)
 
-    <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="alternate" type="application/rss+xml" title="Narendra L - Python Developer from Bengaluru" href="/feed.xml" />
+my_logger.debug('debug message')
+my_logger.info('info message')
+my_logger.warn('warn message')
+my_logger.error('error message')
+my_logger.critical('critical message')
+</code></pre></div></div>
 
-    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
-  </head>
+<p>What if you have many modules/ crons. where in you need to log them separately ?</p>
 
-  <body>
-    <div class="wrapper-masthead">
-      <div class="container">
-        <header class="masthead clearfix">
-          <a href="/" class="site-avatar"><img src="https://www.gravatar.com/avatar/98f20d024b2b9b20fdeef6c906fe6d69?s=328&d=identicon&r=PG" /></a>
+<p>the simple way is <a href="https://docs.python.org/2/library/logging.config.html#logging.config.fileConfig" title="https://docs.python.org/2/library/logging.config.html#logging.config.fileConfig">https://docs.python.org/2/library/logging.config.html#logging.config.fileConfig</a></p>
 
-          <div class="site-info">
-            <h1 class="site-name"><a href="/">Narendra L</a></h1>
-            <p class="site-description">Python Developer from Bengaluru</p>
-          </div>
+<p>Read this <a href="https://docs.python.org/2/library/logging.config.html#logging-config-fileformat" title="https://docs.python.org/2/library/logging.config.html#logging-config-fileformat">https://docs.python.org/2/library/logging.config.html#logging-config-fileformat</a> to know logging configuration</p>
 
-          <nav>
-            <a href="/">Blog</a>
-            <a href="/about">About</a>
-          </nav>
-        </header>
-      </div>
-    </div>
+<p>If your web framework is pyramid, you can use development.ini file itself</p>
 
-    <div id="main" role="main" class="container">
-      <article class="post">
-  <h1>You're up and running!</h1>
+<p>Edit: Learnt that you can log method/ function entry exit actions using decorators also</p>
 
-  <div class="entry">
-    <p>Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).</p>
+<p>eg: <a href="http://www.wellho.net/resources/ex.php4?item=y212/dec01" title="http://www.wellho.net/resources/ex.php4?item=y212/dec01">http://www.wellho.net/resources/ex.php4?item=y212/dec01</a></p>
 
-<p><img src="/images/config.png" alt="_config.yml" /></p>
+<p>simillary use class level decoration to log method entry exit actions</p>
 
-<p>The easiest way to make your first post is to edit this one. Go into /_posts/ and update the Hello World markdown file. For more instructions head over to the <a href="https://github.com/barryclark/jekyll-now">Jekyll Now repository</a> on GitHub.</p>
+<p>Eg: logger section in my pyramid app</p>
 
-  </div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[logger_alembic]
+level = INFO
+handlers = console
+qualname = alembic
 
-  <div class="date">
-    Written on March  3, 2014
-  </div>
+[logger_eta_c]
+level = DEBUG
+handlers = eta
+qualname = eta_c
 
-  
-</article>
+[logger_vp_cron]
+level = DEBUG
+handlers = vpc
+qualname = vp_cron
 
-    </div>
+[logger_rp_cron]
+level = DEBUG
+handlers = rpc
+qualname = rp_cron
 
-    <div class="wrapper-footer">
-      <div class="container">
-        <footer class="footer">
-          
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
 
+[handler_eta]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/eta.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
 
+[handler_vpc]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/vp_cron.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
 
-<a href="https://github.com/Narengowda/"><i class="svg-icon github"></i></a>
+[handler_rpc]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/route_path_cron.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
 
+[handler_filelog]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/zta_console.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
 
-
-
-
-
-
-
-        </footer>
-      </div>
-    </div>
-
-    
-
-  </body>
-</html>
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
+</code></pre></div></div>

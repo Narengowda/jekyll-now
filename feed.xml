@@ -1,5 +1,95 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2018-01-17T20:14:38+05:30</updated><id>/</id><title type="html">Narendra L</title><subtitle>Python Developer from Bengaluru</subtitle><entry><title type="html">You’re up and running!</title><link href="/Hello-World/" rel="alternate" type="text/html" title="You're up and running!" /><published>2014-03-03T00:00:00+05:30</published><updated>2014-03-03T00:00:00+05:30</updated><id>/Hello-World</id><content type="html" xml:base="/Hello-World/">&lt;p&gt;Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2018-01-17T21:42:41+05:30</updated><id>/</id><title type="html">Narendra L</title><subtitle>Python Developer from Bengaluru</subtitle><entry><title type="html">Better pyramid logging with python and log configurationsYou’re up and running!</title><link href="/Hello-World/" rel="alternate" type="text/html" title="Better pyramid logging with python and log configurationsYou're up and running!" /><published>2014-03-03T05:30:00+05:30</published><updated>2014-03-03T05:30:00+05:30</updated><id>/Hello-World</id><content type="html" xml:base="/Hello-World/">&lt;p&gt;We often log like below mentioned code snippet, but there is a better way to do it !!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/config.png&quot; alt=&quot;_config.yml&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import logging
+import logging.handlers
 
-&lt;p&gt;The easiest way to make your first post is to edit this one. Go into /_posts/ and update the Hello World markdown file. For more instructions head over to the &lt;a href=&quot;https://github.com/barryclark/jekyll-now&quot;&gt;Jekyll Now repository&lt;/a&gt; on GitHub.&lt;/p&gt;</content><author><name></name></author><summary type="html">Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).</summary></entry></feed>
+LOG_FILENAME = 'testing.log'
+
+# Set up a specific logger with our desired output level
+my_logger = logging.getLogger('agentlogger')
+
+# Add the log message handler to the logger
+handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=2000, backupCount=100)
+
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+my_logger.addHandler(handler)
+
+my_logger.debug('debug message')
+my_logger.info('info message')
+my_logger.warn('warn message')
+my_logger.error('error message')
+my_logger.critical('critical message')
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;What if you have many modules/ crons. where in you need to log them separately ?&lt;/p&gt;
+
+&lt;p&gt;the simple way is &lt;a href=&quot;https://docs.python.org/2/library/logging.config.html#logging.config.fileConfig&quot; title=&quot;https://docs.python.org/2/library/logging.config.html#logging.config.fileConfig&quot;&gt;https://docs.python.org/2/library/logging.config.html#logging.config.fileConfig&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Read this &lt;a href=&quot;https://docs.python.org/2/library/logging.config.html#logging-config-fileformat&quot; title=&quot;https://docs.python.org/2/library/logging.config.html#logging-config-fileformat&quot;&gt;https://docs.python.org/2/library/logging.config.html#logging-config-fileformat&lt;/a&gt; to know logging configuration&lt;/p&gt;
+
+&lt;p&gt;If your web framework is pyramid, you can use development.ini file itself&lt;/p&gt;
+
+&lt;p&gt;Edit: Learnt that you can log method/ function entry exit actions using decorators also&lt;/p&gt;
+
+&lt;p&gt;eg: &lt;a href=&quot;http://www.wellho.net/resources/ex.php4?item=y212/dec01&quot; title=&quot;http://www.wellho.net/resources/ex.php4?item=y212/dec01&quot;&gt;http://www.wellho.net/resources/ex.php4?item=y212/dec01&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;simillary use class level decoration to log method entry exit actions&lt;/p&gt;
+
+&lt;p&gt;Eg: logger section in my pyramid app&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[logger_alembic]
+level = INFO
+handlers = console
+qualname = alembic
+
+[logger_eta_c]
+level = DEBUG
+handlers = eta
+qualname = eta_c
+
+[logger_vp_cron]
+level = DEBUG
+handlers = vpc
+qualname = vp_cron
+
+[logger_rp_cron]
+level = DEBUG
+handlers = rpc
+qualname = rp_cron
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[handler_eta]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/eta.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
+
+[handler_vpc]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/vp_cron.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
+
+[handler_rpc]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/route_path_cron.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
+
+[handler_filelog]
+class = handlers.TimedRotatingFileHandler
+args = ('logs/zta_console.log', 'midnight', 1, 5, 'utf-8')
+level = DEBUG
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">We often log like below mentioned code snippet, but there is a better way to do it !!</summary></entry></feed>
