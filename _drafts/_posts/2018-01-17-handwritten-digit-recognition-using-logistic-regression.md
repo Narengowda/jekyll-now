@@ -4,7 +4,7 @@ undefined: Description
 created_date: 2018-01-17 00:00:00 +0530
 date: 2018-01-17 23:44:09 +0000
 ---
-![](https://cdn-images-1.medium.com/max/1588/1\*1TkgO9Zz6rC3KpAYNl5KfA.png)
+![](/uploads/2018/01/17/1_1TkgO9Zz6rC3KpAYNl5KfA.png)
 
 Lets use data digits dataset provided in python library, sklearn
 
