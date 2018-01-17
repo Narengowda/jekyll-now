@@ -1,7 +1,7 @@
 ---
 layout: page
 title: curriculum vitae
-permalink: "/about/"
+permalink: "/curriculum-vitae/"
 ---
 **NARENDRA L** 
 
