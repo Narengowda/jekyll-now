@@ -1,0 +1,16 @@
+<p>Handy solution to grep and kill process by process name.</p>
+
+<p>When Celery workers are not properly shutdown their will be background celery workers running and they needs to be killed. Eg:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps -ef | grep celery | awk {'print $2'} | xargs kill
+</code></pre></div></div>
+
+<p>Or you can install “htop”</p>
+
+<blockquote>
+  <p>sudo yum install htop</p>
+
+  <p>sudo apt-get install htop</p>
+</blockquote>
+
+<p>Along with procesess you can now see memory/cpu/pid information press F4 to filter processess based on keyword, then press Enter and press F9 to kill.</p>

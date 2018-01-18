@@ -1,0 +1,38 @@
+<p>Pool size in sqlalchmey can be configured while creating engine, or if you are encountering below errors ?</p>
+
+<blockquote>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in _do_get#012    (self.size(), self.overflow(), self._timeout))#012TimeoutError: QueuePool limit of size 5 overflow 10 reached, connection timed out, timeout 30
+</code></pre></div>  </div>
+
+</blockquote>
+
+<p>All you have to do is</p>
+
+<blockquote>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>engine = create_engine('postgresql://me@localhost/mydb',pool_size=20, max_overflow=0)
+</code></pre></div>  </div>
+
+</blockquote>
+
+<p>But what if you are creating engine using config ? (pyramid)</p>
+
+<blockquote>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config = Configurator(settings=settings)
+engine = engine_from_config(settings, prefix='sqlalchemy.')
+config.registry.dbmaker = sessionmaker(bind=engine)
+</code></pre></div>  </div>
+
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://github.com/zzzeek/sqlalchemy/blob/master/lib/sqlalchemy/engine/init.py#L376
+</code></pre></div></div>
+
+<p>in your development.ini</p>
+
+<blockquote>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sqlalchemy.url = postgresql://postgres:password@localhost/your_db
+sqlalchemy.pool_size = 10
+sqlalchemy.max_overflow = 15
+</code></pre></div>  </div>
+
+</blockquote>

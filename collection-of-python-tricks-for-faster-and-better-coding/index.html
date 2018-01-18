@@ -1,0 +1,174 @@
+<p>Here are some of the Python tricks and tips which helps you to write better code.</p>
+
+<p>Monkey patch a object/class</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Foo(object):
+    def __init__(self, arg1, arg2, **kwargs):
+        #do stuff with arg1 and arg2
+        self.__dict__.update(kwargs)
+
+f = Foo('arg1', 'arg2', bar=20, baz=10)
+# Now f is a Foo object with two extra attributes
+</code></pre></div></div>
+
+<p>Chaining comparision operator</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; x = 5
+&gt;&gt;&gt; 1 &lt; x &lt; 10
+True
+
+# This is equal to
+&gt;&gt;&gt; (1 &lt; x) and (x &lt; 10)
+</code></pre></div></div>
+
+<p>Set operations</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; # Schortcut to create set
+&gt;&gt;&gt; s = {1, 2, 3, 4}
+&gt;&gt;&gt; 
+&gt;&gt;&gt; a = set([1,2,3,4])
+&gt;&gt;&gt; b = set([3,4,5,6])
+&gt;&gt;&gt; a | b # Union
+{1, 2, 3, 4, 5, 6}
+&gt;&gt;&gt; a &amp; b # Intersection
+{3, 4}
+&gt;&gt;&gt; a &lt; b # Subset
+False
+&gt;&gt;&gt; a - b # Difference
+{1, 2}
+&gt;&gt;&gt; a ^ b # Symmetric Difference
+{1, 2, 5, 6}
+</code></pre></div></div>
+
+<p>Create objects at run time !!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; NewType = type("NewType", (object,), {"x": "hello"})
+&gt;&gt;&gt; n = NewType()
+&gt;&gt;&gt; n.x
+"hello"
+which is exactly the same as
+
+&gt;&gt;&gt; class NewType(object):
+&gt;&gt;&gt;     x = "hello"
+&gt;&gt;&gt; n = NewType()
+&gt;&gt;&gt; n.x
+"hello"
+</code></pre></div></div>
+
+<p>Writing descriptors</p>
+
+<p>The following code creates a class whose objects are data descriptors which print a message for each get or set. Overriding <strong>getattribute</strong> is alternate approach that could do this for every attribute. However, this descriptor is useful for monitoring just a few chosen attributes:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class RevealAccess(object):
+    """A data descriptor that sets and returns values
+       normally and prints a message logging their access.
+    """
+
+    def __init__(self, initval=None, name='var'):
+        self.val = initval
+        self.name = name
+
+    def __get__(self, obj, objtype):
+        print 'Retrieving', self.name
+        return self.val
+
+    def __set__(self, obj, val):
+        print 'Updating' , self.name
+        self.val = val
+
+&gt;&gt;&gt; class MyClass(object):
+    x = RevealAccess(10, 'var "x"')
+    y = 5
+
+&gt;&gt;&gt; m = MyClass()
+&gt;&gt;&gt; m.x
+Retrieving var "x"
+10
+&gt;&gt;&gt; m.x = 20
+Updating var "x"
+&gt;&gt;&gt; m.x
+Retrieving var "x"
+20
+&gt;&gt;&gt; m.y
+5
+</code></pre></div></div>
+
+<p>The protocol is simple and offers exciting possibilities. Several use cases are so common that they have been packaged into individual function calls. Properties, bound and unbound methods, static methods, and class methods are all based on the descriptor protocol.</p>
+
+<p>String formatting old and new format compared here</p>
+
+<p>For python string formatting visit [link](<a href="https://pyformat.info/" title="https://pyformat.info/">https://pyformat.info/</a>)</p>
+
+<p>Comprehensions</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; {i**2 for i in range(5)}
+set([0, 1, 4, 16, 9])
+&gt;&gt;&gt; {i: i**2 for i in range(5)}
+{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+&gt;&gt;&gt; [i**2 for i in range(5)]
+[0, 1, 4, 9, 16]
+</code></pre></div></div>
+
+<p>Ternary operator</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; y = 1
+&gt;&gt;&gt; x = 3 if (y == 1) else 2
+&gt;&gt;&gt; x
+3
+&gt;&gt;&gt;
+&gt;&gt;&gt; x = 3 if (y == 1) else 2 if (y == -1) else 1
+&gt;&gt;&gt; x
+3
+</code></pre></div></div>
+
+<p>This functionality will be usefull in webapp to accept get/post true/false param</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; import json
+&gt;&gt;&gt; json.loads('true')
+True
+&gt;&gt;&gt; json.loads('false')
+False
+</code></pre></div></div>
+
+<p>Debug a function from console</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; import pdb
+&gt;&gt;&gt; import mymodule
+&gt;&gt;&gt; pdb.run('mymodule.test()')
+</code></pre></div></div>
+
+<p>List of list flattening</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; l = [[1, 2, 3], [4, 5], [6], [7, 8, 9]]
+&gt;&gt;&gt; sum(l, [])
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+</code></pre></div></div>
+
+<p>Quick benchmark your code</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python -m timeit 'r = range(0, 1000)' 'for i in r: pass'
+</code></pre></div></div>
+
+<p>You can send messages to yield !!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># returns 4 until you tell generator to 'stop' !!
+&gt;&gt;&gt; def looper():
+...     while True:
+...             inp = (yield 4)
+...             if inp == 'stop':
+...                     raise GeneratorExit()
+...
+&gt;&gt;&gt; gen = looper()
+&gt;&gt;&gt; gen.next()
+4
+&gt;&gt;&gt; gen.next()
+4
+&gt;&gt;&gt; gen.send('sdf')
+4
+&gt;&gt;&gt; gen.send('stop')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "&lt;stdin&gt;", line 5, in looper
+GeneratorExit
+&gt;&gt;&gt;
+</code></pre></div></div>
