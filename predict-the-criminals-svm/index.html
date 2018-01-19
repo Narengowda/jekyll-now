@@ -8,246 +8,102 @@
 
 <p>Here is how this problem can be solved using SVM</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%matplotlib inline
-import pandas as pd
-import matplotlib.pyplot as plt
-df = pd.read_csv('./e_criminal/criminal_train.csv')
-df.head()
-</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'./e_criminal/criminal_train.csv'</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 
-<table>
-  <tbody>
-    <tr>
-      <td> </td>
-      <td>PERID</td>
-      <td>IFATHER</td>
-      <td>NRCH17_2</td>
-      <td>IRHHSIZ2</td>
-      <td>IIHHSIZ2</td>
-      <td>IRKI17_2</td>
-      <td>IIKI17_2</td>
-      <td>IRHH65_2</td>
-      <td>IIHH65_2</td>
-      <td>PRXRETRY</td>
-      <td>…</td>
-      <td>TOOLONG</td>
-      <td>TROUBUND</td>
-      <td>PDEN10</td>
-      <td>COUTYP2</td>
-      <td>MAIIN102</td>
-      <td>AIIND102</td>
-      <td>ANALWT_C</td>
-      <td>VESTR</td>
-      <td>VEREP</td>
-      <td>Criminal</td>
-    </tr>
-    <tr>
-      <td>0</td>
-      <td>25095143</td>
-      <td>4</td>
-      <td>2</td>
-      <td>4</td>
-      <td>1</td>
-      <td>3</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>99</td>
-      <td>…</td>
-      <td>1</td>
-      <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>2</td>
-      <td>2</td>
-      <td>3884.805998</td>
-      <td>40026</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>13005143</td>
-      <td>4</td>
-      <td>1</td>
-      <td>3</td>
-      <td>1</td>
-      <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>99</td>
-      <td>…</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>3</td>
-      <td>2</td>
-      <td>2</td>
-      <td>1627.108106</td>
-      <td>40015</td>
-      <td>2</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>67415143</td>
-      <td>4</td>
-      <td>1</td>
-      <td>2</td>
-      <td>1</td>
-      <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>99</td>
-      <td>…</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>3</td>
-      <td>2</td>
-      <td>2</td>
-      <td>4344.957980</td>
-      <td>40024</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>70925143</td>
-      <td>4</td>
-      <td>0</td>
-      <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>99</td>
-      <td>…</td>
-      <td>2</td>
-      <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>2</td>
-      <td>2</td>
-      <td>792.521931</td>
-      <td>40027</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>75235143</td>
-      <td>1</td>
-      <td>0</td>
-      <td>6</td>
-      <td>1</td>
-      <td>4</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>99</td>
-      <td>…</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>1518.118526</td>
-      <td>40001</td>
-      <td>2</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
+<span class="o">|</span>  <span class="o">|</span> <span class="n">PERID</span> <span class="o">|</span> <span class="n">IFATHER</span> <span class="o">|</span> <span class="n">NRCH17_2</span> <span class="o">|</span> <span class="n">IRHHSIZ2</span> <span class="o">|</span> <span class="n">IIHHSIZ2</span> <span class="o">|</span> <span class="n">IRKI17_2</span> <span class="o">|</span> <span class="n">IIKI17_2</span> <span class="o">|</span> <span class="n">IRHH65_2</span> <span class="o">|</span> <span class="n">IIHH65_2</span> <span class="o">|</span> <span class="n">PRXRETRY</span> <span class="o">|</span> <span class="o">...</span> <span class="o">|</span> <span class="n">TOOLONG</span> <span class="o">|</span> <span class="n">TROUBUND</span> <span class="o">|</span> <span class="n">PDEN10</span> <span class="o">|</span> <span class="n">COUTYP2</span> <span class="o">|</span> <span class="n">MAIIN102</span> <span class="o">|</span> <span class="n">AIIND102</span> <span class="o">|</span> <span class="n">ANALWT_C</span> <span class="o">|</span> <span class="n">VESTR</span> <span class="o">|</span> <span class="n">VEREP</span> <span class="o">|</span> <span class="n">Criminal</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">0</span> <span class="o">|</span> <span class="mi">25095143</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">99</span> <span class="o">|</span> <span class="o">...</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mf">3884.805998</span> <span class="o">|</span> <span class="mi">40026</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">0</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">13005143</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">99</span> <span class="o">|</span> <span class="o">...</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mf">1627.108106</span> <span class="o">|</span> <span class="mi">40015</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">67415143</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">99</span> <span class="o">|</span> <span class="o">...</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mf">4344.957980</span> <span class="o">|</span> <span class="mi">40024</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">0</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="mi">70925143</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="mi">0</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">99</span> <span class="o">|</span> <span class="o">...</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mf">792.521931</span> <span class="o">|</span> <span class="mi">40027</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">0</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="mi">75235143</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">0</span> <span class="o">|</span> <span class="mi">6</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">99</span> <span class="o">|</span> <span class="o">...</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mf">1518.118526</span> <span class="o">|</span> <span class="mi">40001</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="mi">0</span> <span class="o">|</span>
 
-<p>5 rows × 72 columns</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import numpy as np
-X = df.iloc[: ,:-1]
-Y = df.iloc[: , X.shape[1]:]
-Y = np.ravel(Y)
-Y.shape
+<span class="mi">5</span> <span class="n">rows</span> <span class="err">×</span> <span class="mi">72</span> <span class="n">columns</span>
 
 
-(45718,)
-
-# Feature Selection
-
-# Recursive Feature Elimination (RFE) is based on the idea to repeatedly
-# construct a model and choose either the best or worst performing feature,
-# setting the feature aside and then repeating the process with the rest of the features
-
-from sklearn import datasets
-from sklearn.feature_selection import RFE
-from sklearn.linear_model import LogisticRegression
-
-logreg = LogisticRegression()
-
-rfe = RFE(logreg, 18)
-rfe = rfe.fit(X, Y)
-print(rfe.support_)
-print(rfe.ranking_)
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span> <span class="p">,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span> <span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">shape</span>
 
 
-[False  True False  True False  True False False False False False False
- False False False False  True False False False False False False False
- False False False False  True False  True False  True False False False
- False False False False False  True False False  True False False False
-  True False  True False  True False False  True  True  True False False
-  True  True False False False False False  True False False False]
-[28  1 35  1 38  1 37 51 36 21 13 53 18 54  2  3  1 11 20 15  5 24 23 25 16
- 17 33 48  1 44  1 41  1 50  6  4  9 12 14 34 49  1 32 52  1 40 19 47  1 39
-  1 46  1 45 22  1  1  1 43 42  1  1  8  7 31 30 10  1 27 26 29]
+<span class="p">(</span><span class="mi">45718</span><span class="p">,)</span>
+
+<span class="c"># Feature Selection</span>
+
+<span class="c"># Recursive Feature Elimination (RFE) is based on the idea to repeatedly</span>
+<span class="c"># construct a model and choose either the best or worst performing feature,</span>
+<span class="c"># setting the feature aside and then repeating the process with the rest of the features</span>
+
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">RFE</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+
+<span class="n">logreg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+
+<span class="n">rfe</span> <span class="o">=</span> <span class="n">RFE</span><span class="p">(</span><span class="n">logreg</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">rfe</span> <span class="o">=</span> <span class="n">rfe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">rfe</span><span class="o">.</span><span class="n">support_</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">rfe</span><span class="o">.</span><span class="n">ranking_</span><span class="p">)</span>
 
 
-# Normalize the data
-from sklearn import preprocessing
-x = df.values #returns a numpy array
-
-min_max_scaler = preprocessing.MinMaxScaler()
-x_scaled = min_max_scaler.fit_transform(x)
-X = pd.DataFrame(x_scaled)
-
-
-X = X[[column for consider, column in zip(rfe.support_, X.columns) if consider]]
-
-from sklearn.cross_validation import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+<span class="p">[</span><span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>
+<span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>
+<span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>
+<span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>
+<span class="bp">True</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span>  <span class="bp">True</span>  <span class="bp">True</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span>
+<span class="bp">True</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span>  <span class="bp">True</span> <span class="bp">False</span> <span class="bp">False</span> <span class="bp">False</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">28</span>  <span class="mi">1</span> <span class="mi">35</span>  <span class="mi">1</span> <span class="mi">38</span>  <span class="mi">1</span> <span class="mi">37</span> <span class="mi">51</span> <span class="mi">36</span> <span class="mi">21</span> <span class="mi">13</span> <span class="mi">53</span> <span class="mi">18</span> <span class="mi">54</span>  <span class="mi">2</span>  <span class="mi">3</span>  <span class="mi">1</span> <span class="mi">11</span> <span class="mi">20</span> <span class="mi">15</span>  <span class="mi">5</span> <span class="mi">24</span> <span class="mi">23</span> <span class="mi">25</span> <span class="mi">16</span>
+<span class="mi">17</span> <span class="mi">33</span> <span class="mi">48</span>  <span class="mi">1</span> <span class="mi">44</span>  <span class="mi">1</span> <span class="mi">41</span>  <span class="mi">1</span> <span class="mi">50</span>  <span class="mi">6</span>  <span class="mi">4</span>  <span class="mi">9</span> <span class="mi">12</span> <span class="mi">14</span> <span class="mi">34</span> <span class="mi">49</span>  <span class="mi">1</span> <span class="mi">32</span> <span class="mi">52</span>  <span class="mi">1</span> <span class="mi">40</span> <span class="mi">19</span> <span class="mi">47</span>  <span class="mi">1</span> <span class="mi">39</span>
+<span class="mi">1</span> <span class="mi">46</span>  <span class="mi">1</span> <span class="mi">45</span> <span class="mi">22</span>  <span class="mi">1</span>  <span class="mi">1</span>  <span class="mi">1</span> <span class="mi">43</span> <span class="mi">42</span>  <span class="mi">1</span>  <span class="mi">1</span>  <span class="mi">8</span>  <span class="mi">7</span> <span class="mi">31</span> <span class="mi">30</span> <span class="mi">10</span>  <span class="mi">1</span> <span class="mi">27</span> <span class="mi">26</span> <span class="mi">29</span><span class="p">]</span>
 
 
-import pandas as pd
-import numpy as np
-from sklearn import svm, datasets
-import matplotlib.pyplot as plt
+<span class="c"># Normalize the data</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">values</span> <span class="c">#returns a numpy array</span>
 
-C = 1.0 # SVM regularization parameter
-svc = svm.SVC(kernel='linear', C=C, decision_function_shape='ovr').fit(X_train, y_train)
-y_pred = svc.predict(X_test)
-
-
-from sklearn.metrics import confusion_matrix, f1_score
-confusion = confusion_matrix(y_test, y_pred)
-#print(confusion)
-tn, fp, fn, tp = confusion.ravel()
-# TrueNegative, FalsePositive, Falsenegative, TruePositive
-
-print "========== Criminal prediction output ============"
-print "Correct predictions = ", tn+tp
+<span class="n">min_max_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">x_scaled</span> <span class="o">=</span> <span class="n">min_max_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">x_scaled</span><span class="p">)</span>
 
 
-print "INCorrect predictions = ", fp+fn
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[[</span><span class="n">column</span> <span class="k">for</span> <span class="n">consider</span><span class="p">,</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rfe</span><span class="o">.</span><span class="n">support_</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">consider</span><span class="p">]]</span>
 
-score = f1_score(y_test, y_pred)
-print score
+<span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">svm</span><span class="p">,</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c"># SVM regularization parameter</span>
+<span class="n">svc</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s">'linear'</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">decision_function_shape</span><span class="o">=</span><span class="s">'ovr'</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">f1_score</span>
+<span class="n">confusion</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="c">#print(confusion)</span>
+<span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="c"># TrueNegative, FalsePositive, Falsenegative, TruePositive</span>
+
+<span class="k">print</span> <span class="s">"========== Criminal prediction output ============"</span>
+<span class="k">print</span> <span class="s">"Correct predictions = "</span><span class="p">,</span> <span class="n">tn</span><span class="o">+</span><span class="n">tp</span>
 
 
-========== Criminal prediction output ============
-Correct predictions =  12724
-INCorrect predictions =  992
-0.0
+<span class="k">print</span> <span class="s">"INCorrect predictions = "</span><span class="p">,</span> <span class="n">fp</span><span class="o">+</span><span class="n">fn</span>
+
+<span class="n">score</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">score</span>
+
+
+<span class="o">==========</span> <span class="n">Criminal</span> <span class="n">prediction</span> <span class="n">output</span> <span class="o">============</span>
+<span class="n">Correct</span> <span class="n">predictions</span> <span class="o">=</span>  <span class="mi">12724</span>
+<span class="n">INCorrect</span> <span class="n">predictions</span> <span class="o">=</span>  <span class="mi">992</span>
+<span class="mf">0.0</span>
 </code></pre></div></div>
