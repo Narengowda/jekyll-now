@@ -88,9 +88,13 @@ for i ,m in enumerate(mess):
 	print m, ' == ', output[i]
 ```
 
+Output:
+
 you are a WINNER!! To claim 1000$ call 99999999  ==  spam
+
+
 I am ready to invest in dating service  ==  ham
 
 SMS data from: [https://www.kaggle.com/uciml/sms-spam-collection-dataset](https://www.kaggle.com/uciml/sms-spam-collection-dataset "https://www.kaggle.com/uciml/sms-spam-collection-dataset")
 
-Reference:  [https://youtu.be/FX41g2OVXgE?t=1m59s](https://youtu.be/FX41g2OVXgE?t=1m59s "https://youtu.be/FX41g2OVXgE?t=1m59s") 
+Reference:  [https://youtu.be/FX41g2OVXgE?t=1m59s](https://youtu.be/FX41g2OVXgE?t=1m59s "https://youtu.be/FX41g2OVXgE?t=1m59s")
