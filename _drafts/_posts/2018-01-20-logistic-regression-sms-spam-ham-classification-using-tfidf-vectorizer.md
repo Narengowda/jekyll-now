@@ -7,7 +7,7 @@ date: 2018-01-20 11:59:41 +0000
 ---
 Our aim is to classify SMSes in to SPAM or HAM messages using logistic regression and TFIDF vectorizer.
 
-steps:
+Steps to solve:
 
 1. Read data from spam_sms.csv
 2. SMS text processing by using TERM FREQUENCY and INVERSE DOCUMENT FREQUENCY
@@ -91,7 +91,6 @@ for i ,m in enumerate(mess):
 Output:
 
 you are a WINNER!! To claim 1000$ call 99999999  ==  spam
-
 
 I am ready to invest in dating service  ==  ham
 
