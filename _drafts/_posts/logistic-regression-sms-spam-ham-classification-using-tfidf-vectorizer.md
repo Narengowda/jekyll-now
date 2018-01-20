@@ -4,7 +4,7 @@ undefined: Description
 created_date: 2018-01-16 18:30:00 +0000
 date: 2018-01-20 11:59:41 +0000
 ---
-Aim is to classify SMSes in to SPAM or HAM messages using logistic regression.
+Our aim is to classify SMSes in to SPAM or HAM messages using logistic regression and TFIDF vectorizer.
 
 steps:
 
@@ -77,7 +77,7 @@ print "Accuracy: %0.2f percent" % (acc *100)
     (1394, 7170)
     Accuracy: 90.24 percent
 
-Lets test our classfier with some sample messages.
+Lets test our classifier with some sample messages.
 
 ```python
 mess = ['you are a WINNER!! To claim 1000$ call 99999999', "I am ready to invest in dating service"]
@@ -89,3 +89,7 @@ for i ,m in enumerate(mess):
 
 you are a WINNER!! To claim 1000$ call 99999999  ==  spam
 I am ready to invest in dating service  ==  ham
+
+SMS data from: [https://www.kaggle.com/uciml/sms-spam-collection-dataset](https://www.kaggle.com/uciml/sms-spam-collection-dataset "https://www.kaggle.com/uciml/sms-spam-collection-dataset")
+
+Reference:  [https://youtu.be/FX41g2OVXgE?t=1m59s](https://youtu.be/FX41g2OVXgE?t=1m59s "https://youtu.be/FX41g2OVXgE?t=1m59s") 
