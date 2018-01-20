@@ -1,6 +1,6 @@
 ---
 title: Python questions for retrospection
-date: 2018-01-17 00:00:00 +0000
+date: 2017-04-06 05:30:00 +0530
 this_is_the_label: This is lable i added
 ---
 ##### Are you a python newbie or preparing for interview ?? Try answering these questions
