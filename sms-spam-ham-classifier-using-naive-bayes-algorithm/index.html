@@ -1,0 +1,117 @@
+<p>Conditional probability is the probability that something will happen, <strong><em>given that something else</em> has already occurred</strong>. Using the conditional probability, we can calculate the probability of an event using its prior knowledge.</p>
+
+<p>Below is the formula for calculating the conditional probability.<a href="https://www.analyticsvidhya.com/wp-content/uploads/2015/09/Bayes_rule-300x172.png"><img src="https://www.analyticsvidhya.com/wp-content/uploads/2015/09/Bayes_rule-300x172-300x172.png =300x172" alt="Bayes" /></a></p>
+
+<p><strong>where</strong></p>
+
+<ul>
+  <li>P(H) is the probability of hypothesis H being true. This is known as the prior probability.</li>
+  <li>P(E) is the probability of the evidence(regardless of the hypothesis).</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>P(E</td>
+          <td>H) is the probability of the evidence given that hypothesis is true.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>P(H</td>
+          <td>E) is the probability of the hypothesis given that the evidence is there.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Naive Bayes classifier gives great results when we use it for textual data analysis. Such as Natural Language Processing.</p>
+
+<p>In this article lets predict a given SMS is SPAM or HAM based on the probability of presence of certain words which were part of SPAM messages.</p>
+
+<p>Lets code</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>    
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'./spam_sms.csv'</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s">"cp1252"</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s">'v1'</span><span class="p">,</span> <span class="s">'v2'</span><span class="p">]]</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td> </td>
+      <td>v1</td>
+      <td>v2</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>ham</td>
+      <td>Go until jurong point, crazy.. Available only …</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>ham</td>
+      <td>Ok lar… Joking wif u oni…</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>spam</td>
+      <td>Free entry in 2 a wkly comp to win FA Cup fina…</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>ham</td>
+      <td>U dun say so early hor… U c already then say…</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>ham</td>
+      <td>Nah I don’t think he goes to usf, he lives aro…</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">MultinomialNB</span>
+<span class="n">count_vect</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+
+<span class="n">x_train_counts</span> <span class="o">=</span> <span class="n">count_vect</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'v2'</span><span class="p">])</span>
+
+<span class="c"># Check frequesncy of a word .astype</span>
+<span class="k">print</span> <span class="n">count_vect</span><span class="o">.</span><span class="n">vocabulary_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'hello'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">3814</span>
+
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span>
+<span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train_counts</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'v1'</span><span class="p">])</span>
+
+<span class="n">MultinomialNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">class_prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_prior</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">count_vect</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s">"Hey how are you"</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span><span class="n">ham</span>
+
+<span class="k">print</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">count_vect</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s">"free credit card for you only"</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">spam</span>
+
+<span class="k">print</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">count_vect</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s">"We are super excited to deliver happines to you. To enjoy seamless shopping experience download our app. We have a welcome gift for you. "</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">spam</span>
+</code></pre></div></div>
+
+<h3 id="how-ever-this-one-fails-">How ever this one fails !!</h3>
+
+<p>The trick is to deceive, use cred!t - credit 0nly - only 0ffer - offer st0res = stores</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">count_vect</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s">"cred!t card f0r you 0nly, great disc0unts. 0ffer on selected st0res"</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ham</span>
+</code></pre></div></div>
+
+<p>SMS data from: <a href="https://www.kaggle.com/uciml/sms-spam-collection-dataset" title="https://www.kaggle.com/uciml/sms-spam-collection-dataset">https://www.kaggle.com/uciml/sms-spam-collection-dataset</a></p>
+
+<p>references:</p>
+
+<p><a href="http://dataaspirant.com/2017/02/06/naive-bayes-classifier-machine-learning/" title="http://dataaspirant.com/2017/02/06/naive-bayes-classifier-machine-learning/">http://dataaspirant.com/2017/02/06/naive-bayes-classifier-machine-learning/</a></p>
+
+<p><a href="https://www.analyticsvidhya.com/blog/2017/09/naive-bayes-explained/" title="https://www.analyticsvidhya.com/blog/2017/09/naive-bayes-explained/">https://www.analyticsvidhya.com/blog/2017/09/naive-bayes-explained/</a></p>
