@@ -1,7 +1,8 @@
 ---
 title: Logistic regression - SMS SPAM/HAM classification using TFIDF vectorizer
-undefined: Description
-created_date: 2018-01-16 18:30:00 +0000
+undefined: Our aim is to classify SMSes in to SPAM or HAM messages using logistic
+  regression and TFIDF vectorize
+created_date: 2018-01-20 00:00:00 +0530
 date: 2018-01-20 11:59:41 +0000
 ---
 Our aim is to classify SMSes in to SPAM or HAM messages using logistic regression and TFIDF vectorizer.
