@@ -1,0 +1,90 @@
+<p>Our aim is to classify SMSes in to SPAM or HAM messages using logistic regression and TFIDF vectorizer.</p>
+
+<p>Steps to solve:</p>
+
+<ol>
+  <li>Read data from spam_sms.csv</li>
+  <li>SMS text processing by using TERM FREQUENCY and INVERSE DOCUMENT FREQUENCY</li>
+  <li>Train the model using Logistic regression</li>
+  <li>Predict on test data and calculate accuracy using estimator fro logistic regression</li>
+</ol>
+
+<h4 id="word-frequencies-with-tfidfvectorizer">Word Frequencies with TfidfVectorizer</h4>
+
+<p>Word counts are a good starting point, but are very basic.</p>
+
+<p>One issue with simple counts is that some words like “the” will  appear many times and their large counts will not be very meaningful in  the encoded vectors.</p>
+
+<p>An alternative is to calculate word frequencies, and by far the most  popular method is called TF-IDF. This is an acronym than stands for  “Term Frequency – Inverse Document” Frequency which are the components  of the resulting scores assigned to each word.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Term Frequency: This summarizes how often a given word appears within a document.
+Inverse Document Frequency: This downscales words that appear a lot across documents.
+</code></pre></div></div>
+
+<p>Without going into the math, TF-IDF are word frequency scores that  try to highlight words that are more interesting, e.g. frequent in a  document but not across documents.</p>
+
+<p>The TfidfVectorizer will tokenize documents, learn the vocabulary and  inverse document frequency weightings, and allow you to encode new  documents. Alternately, if you already have a learned CountVectorizer,  you can use it with a TfidfTransformer to just calculate the inverse  document frequencies and start encoding documents.</p>
+
+<p>The same create, fit, and transform process is used as with the CountVectorizer.</p>
+
+<p>Below is an example of using the TfidfVectorizer to learn vocabulary  and inverse document frequencies across 3 small documents and then  encode one of those documents.</p>
+
+<h4 id="watch-this-httpsyoutubefx41g2ovxget1m59s-to-understand-tfidf">Watch this <a href="https://youtu.be/FX41g2OVXgE?t=1m59s" title="https://youtu.be/FX41g2OVXgE?t=1m59s">https://youtu.be/FX41g2OVXgE?t=1m59s</a> to understand TFIDF</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model.logistic</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">cross_val_score</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'./spam_sms.csv'</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s">"cp1252"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Random split into training and test sets can be quickly computed with the train_test_split helper function</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Convert list of string to TFIDF format as explained above</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s">'english'</span><span class="p">)</span>
+<span class="n">tfidf_train_x</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now perform logistic regression on vectorized data</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">classifier</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+<span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tfidf_train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Learning the parameters of a prediction function and testing it on  the same data is a methodological mistake: a model that would just  repeat the labels of the samples that it has just seen would have a  perfect score but would fail to predict anything useful on yet-unseen  data. This situation is called overfitting. To avoid it, it is common  practice when performing a (supervised) machine learning experiment to  hold out part of the available data as a test set</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tfidf_test_x</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">tfidf_test_x</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">tfidf_test_x</span><span class="p">,</span> <span class="n">test_y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">"Accuracy: </span><span class="si">%0.2</span><span class="s">f percent"</span> <span class="o">%</span> <span class="p">(</span><span class="n">acc</span> <span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1394, 7170)
+Accuracy: 90.24 percent
+</code></pre></div></div>
+
+<p>Lets test our classifier with some sample messages.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mess</span> <span class="o">=</span> <span class="p">[</span><span class="s">'you are a WINNER!! To claim 1000$ call 99999999'</span><span class="p">,</span> <span class="s">"I am ready to invest in dating service"</span><span class="p">]</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">mess</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="p">,</span><span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mess</span><span class="p">):</span>
+	<span class="k">print</span> <span class="n">m</span><span class="p">,</span> <span class="s">' == '</span><span class="p">,</span> <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Output:</p>
+
+<p>you are a WINNER!! To claim 1000$ call 99999999  ==  spam</p>
+
+<p>I am ready to invest in dating service  ==  ham</p>
+
+<p>SMS data from: <a href="https://www.kaggle.com/uciml/sms-spam-collection-dataset" title="https://www.kaggle.com/uciml/sms-spam-collection-dataset">https://www.kaggle.com/uciml/sms-spam-collection-dataset</a></p>
+
+<p>Reference:  <a href="https://youtu.be/FX41g2OVXgE?t=1m59s" title="https://youtu.be/FX41g2OVXgE?t=1m59s">https://youtu.be/FX41g2OVXgE?t=1m59s</a></p>
