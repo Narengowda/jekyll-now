@@ -1,6 +1,6 @@
 ---
 pages:
-- _posts/django-tips.md
+- _posts/2018-01-26-django-tips.md
 - _posts/2018-01-20-logistic-regression-sms-spam-ham-classification-using-tfidf-vectorizer.md
 - _posts/2018-01-19-sms-spam-ham-classifier-using-naive-bayes-algorithm.md
 - _posts/2018-01-18-cnn-convolution-neural-networks-dress-recognition.md
