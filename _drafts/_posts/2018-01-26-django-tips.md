@@ -26,7 +26,9 @@ url(r'^my_secure_admin/', admin.site.urls),
  9. Use the [orm of django](https://tutorial.djangogirls.org/en/django_orm/) instead of raw whenever possible, and, if necessary to use raw, escape special characters.
 10. Another way of checking our **Django website** if we do not have access to our server may be as simple as accessing the following website:[ ponycheckup](https://www.ponycheckup.com/) which will give us a **report** about basic **security problems** and how to improve them.
 11. Use the URL tag in templates, so that URLs will not be broken when modified.
-    `{% url %}`
+```
+{% url %}
+```
 12. Auto register your models in admin page
 
 ```python
