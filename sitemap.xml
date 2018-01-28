@@ -57,4 +57,7 @@
 <url>
 <loc>/</loc>
 </url>
+<url>
+<loc>/test/</loc>
+</url>
 </urlset>
