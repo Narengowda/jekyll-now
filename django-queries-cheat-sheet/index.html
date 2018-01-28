@@ -1,0 +1,105 @@
+<p><code class="highlighter-rouge">QuerySet</code> can be constructed, filtered, sliced, and generally passed around without actually hitting the database. No database activity actually occurs until you do something to evaluate the queryset.</p>
+
+<p>Querysets are evaluated when</p>
+
+<ol>
+  <li>iterated</li>
+  <li>slice</li>
+  <li>pickle</li>
+  <li>repr</li>
+  <li>len</li>
+  <li>list</li>
+  <li>bool</li>
+</ol>
+
+<ul>
+  <li>Filter:Returns a new QuerySet containing objects that match the given lookup parameters.</li>
+  <li>Exclude: Returns a new <code class="highlighter-rouge">QuerySet</code> containing objects that do <em>not</em> match the given lookup parameters. In sql SELECT …WHERE NOT..</li>
+  <li>Annotate</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
+  <span class="o">&gt;&gt;&gt;</span> <span class="n">q</span> <span class="o">=</span> <span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="s">'entry'</span><span class="p">))</span>
+  \<span class="c"># The name of the first blog</span>
+  <span class="o">&gt;&gt;&gt;</span> <span class="n">q</span>\<span class="p">[</span><span class="mi">0</span>\<span class="p">]</span><span class="o">.</span><span class="n">name</span>
+  \<span class="s">'Blogasaurus'</span>
+  \<span class="c"># The number of entries on the first blog</span>
+  <span class="o">&gt;&gt;&gt;</span> <span class="n">q</span>\<span class="p">[</span><span class="mi">0</span>\<span class="p">]</span><span class="o">.</span><span class="n">entry__count</span>
+  <span class="mi">42</span>
+</code></pre></div></div>
+
+<ul>
+  <li>order_by</li>
+  <li>reverse</li>
+  <li>
+    <p>distinct</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Entry.objects.order_by('pub_date').distinct('pub_date')
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>values</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Blog.objects.values()
+&lt;QuerySet [{'id': 1, 'name': 'Beatles Blog', 'tagline': 'All the latest Beatles news.'}]&gt;
+  
+Blog.objects.values('id', 'name')
+&lt;QuerySet [{'id': 1, 'name': 'Beatles Blog'}]&gt;
+  
+Blog.objects.values(lower_name=Lower('name'))
+&lt;QuerySet [{'lower_name': 'beatles blog'}]&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>value_list</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; Entry.objects.values_list('id', 'headline')
+&lt;QuerySet [(1, 'First entry'), ...]&gt;
+&gt;&gt;&gt; from django.db.models.functions import Lower
+&gt;&gt;&gt; Entry.objects.values_list('id', Lower('headline'))
+&lt;QuerySet [(1, 'first entry'), ...]&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>dates and datetimes</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; Entry.objects.dates('pub_date', 'year')
+[datetime.date(2005, 1, 1)]
+&gt;&gt;&gt; Entry.objects.dates('pub_date', 'month')
+[datetime.date(2005, 2, 1), datetime.date(2005, 3, 1)]
+&gt;&gt;&gt; Entry.objects.dates('pub_date', 'day')
+[datetime.date(2005, 2, 20), datetime.date(2005, 3, 20)]
+&gt;&gt;&gt; Entry.objects.dates('pub_date', 'day', order='DESC')
+[datetime.date(2005, 3, 20), datetime.date(2005, 2, 20)]
+&gt;&gt;&gt; Entry.objects.filter(headline__contains='Lennon').dates('pub_date', 'day')
+[datetime.date(2005, 3, 20)]
+</code></pre></div>    </div>
+  </li>
+  <li>all</li>
+  <li>
+    <p>union, intersection, difference</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qs1.union(qs2, qs3)
+qs1.intersection(qs2, qs3)
+qs1.difference(qs2, qs3)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Select_related: Returns a <code class="highlighter-rouge">QuerySet</code> that will “follow” foreign-key relationships, selecting additional related-object data when it executes its query. This is a performance booster which results in a single more complex query but means later use of foreign-key relationships won’t require database queries</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Hits the database.
+e = Entry.objects.select_related('blog').get(id=5)
+  
+# Doesn't hit the database, because e.blog has been prepopulated
+# in the previous query.
+b = e.blog
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Prefetch related: similar to select_realted</p>
+
+    <p><code class="highlighter-rouge">select_related</code> works by creating an SQL join and including the fields of the related object in the <code class="highlighter-rouge">SELECT</code> statement. For this reason, <code class="highlighter-rouge">select_related</code> gets the related objects in the same database query. However, to avoid the much larger result set that would result from joining across a ‘many’ relationship, <code class="highlighter-rouge">select_related</code> is limited to single-valued relationships - foreign key and one-to-one.</p>
+
+    <p><code class="highlighter-rouge">prefetch_related</code>, on the other hand, does a separate lookup for each relationship, and does the ‘joining’ in Python. This allows it to prefetch many-to-many and many-to-one objects, which cannot be done using <code class="highlighter-rouge">select_related</code>, in addition to the foreign key and one-to-one relationships that are supported by <code class="highlighter-rouge">select_related</code>.</p>
+  </li>
+</ul>
