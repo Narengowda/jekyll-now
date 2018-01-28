@@ -1,5 +1,6 @@
 ---
 pages:
+- test.md
 - _posts/django-queries-cheat-sheet.md
 - _posts/2018-01-26-django-tips.md
 - _posts/2018-01-20-logistic-regression-sms-spam-ham-classification-using-tfidf-vectorizer.md
