@@ -143,6 +143,7 @@ Blog.objects.select_related().defer("entry__headline", "entry__body")
   <li>bulk_create</li>
   <li>count</li>
   <li>in_bulk: to get multiple entries in bulk</li>
+  <li><strong>OuterRef:</strong> Use <code class="highlighter-rouge">OuterRef</code> when a queryset in a <code class="highlighter-rouge">Subquery</code> needs to refer to a field from the outer query. It acts like an <code class="highlighter-rouge">[F](https://docs.djangoproject.com/en/2.0/ref/models/expressions/#django.db.models.F "django.db.models.F")</code> expression except that the check to see if it refers to a valid field isn’t made until the outer queryset is resolved.</li>
   <li>
     <p>Latest</p>
 
@@ -151,7 +152,7 @@ Blog.objects.select_related().defer("entry__headline", "entry__body")
   </li>
   <li>first and last</li>
   <li>
-    <p>Aggregte:</p>
+    <p>Aggregate:</p>
 
     <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Book.objects.aggregate(Avg('price'), Max('price'), Min('price'))
 </code></pre></div>    </div>
@@ -245,6 +246,35 @@ Parent.objects
         num=models.IntegerField()
     )
 )
+</code></pre></div></div>
+
+<p>WINDOW: Window functions provide a way to apply functions on partitions. Unlike a normal aggregation function which computes a final result for each set defined by the group by, window functions operate on <a href="https://docs.djangoproject.com/en/2.0/ref/models/expressions/#window-frames">frames</a> and partitions, and compute the result for each row.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; from django.db.models import Avg, F, RowRange, Window
+&gt;&gt;&gt; from django.db.models.functions import ExtractYear
+&gt;&gt;&gt; Movie.objects.annotate(
+&gt;&gt;&gt;     avg_rating=Window(
+&gt;&gt;&gt;         expression=Avg('rating'),
+&gt;&gt;&gt;         partition_by=[F('studio'), F('genre')],
+&gt;&gt;&gt;         order_by=ExtractYear('released').asc(),
+&gt;&gt;&gt;         frame=RowRange(start=-2, end=2),
+&gt;&gt;&gt;     ),
+&gt;&gt;&gt; )
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">**Exists:**</code> is a <code class="highlighter-rouge">Subquery</code> subclass that uses an SQL <code class="highlighter-rouge">EXISTS</code> statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.</p>
+
+<p>For example, to annotate each post with whether or not it has a comment from within the last day:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; from django.db.models import Exists, OuterRef
+&gt;&gt;&gt; from datetime import timedelta
+&gt;&gt;&gt; from django.utils import timezone
+&gt;&gt;&gt; one_day_ago = timezone.now() - timedelta(days=1)
+&gt;&gt;&gt; recent_comments = Comment.objects.filter(
+...     post=OuterRef('pk'),
+...     created_at__gte=one_day_ago,
+... )
+&gt;&gt;&gt; Post.objects.annotate(recent_comment=Exists(recent_comments))
 </code></pre></div></div>
 
 <p><a href="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year" title="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year">https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year</a></p>

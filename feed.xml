@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2018-01-30T23:02:45+05:30</updated><id>/</id><title type="html">Narendra L</title><subtitle>Python Developer + noob data scientist + Arduino and Electronics lover</subtitle><entry><title type="html">Django - Queries - Cheat sheet</title><link href="/django-queries-cheat-sheet/" rel="alternate" type="text/html" title="Django - Queries - Cheat sheet" /><published>2018-01-28T07:04:06+05:30</published><updated>2018-01-28T07:04:06+05:30</updated><id>/django-queries-cheat-sheet</id><content type="html" xml:base="/django-queries-cheat-sheet/">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;QuerySet&lt;/code&gt; can be constructed, filtered, sliced, and generally passed around without actually hitting the database. No database activity actually occurs until you do something to evaluate the queryset.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2018-01-30T23:23:44+05:30</updated><id>/</id><title type="html">Narendra L</title><subtitle>Python Developer + noob data scientist + Arduino and Electronics lover</subtitle><entry><title type="html">Django - Queries - Cheat sheet</title><link href="/django-queries-cheat-sheet/" rel="alternate" type="text/html" title="Django - Queries - Cheat sheet" /><published>2018-01-28T07:04:06+05:30</published><updated>2018-01-28T07:04:06+05:30</updated><id>/django-queries-cheat-sheet</id><content type="html" xml:base="/django-queries-cheat-sheet/">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;QuerySet&lt;/code&gt; can be constructed, filtered, sliced, and generally passed around without actually hitting the database. No database activity actually occurs until you do something to evaluate the queryset.&lt;/p&gt;
 
 &lt;p&gt;Querysets are evaluated when&lt;/p&gt;
 
@@ -143,6 +143,7 @@ Blog.objects.select_related().defer(&quot;entry__headline&quot;, &quot;entry__bo
   &lt;li&gt;bulk_create&lt;/li&gt;
   &lt;li&gt;count&lt;/li&gt;
   &lt;li&gt;in_bulk: to get multiple entries in bulk&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;OuterRef:&lt;/strong&gt; Use &lt;code class=&quot;highlighter-rouge&quot;&gt;OuterRef&lt;/code&gt; when a queryset in a &lt;code class=&quot;highlighter-rouge&quot;&gt;Subquery&lt;/code&gt; needs to refer to a field from the outer query. It acts like an &lt;code class=&quot;highlighter-rouge&quot;&gt;[F](https://docs.djangoproject.com/en/2.0/ref/models/expressions/#django.db.models.F &quot;django.db.models.F&quot;)&lt;/code&gt; expression except that the check to see if it refers to a valid field isn’t made until the outer queryset is resolved.&lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;Latest&lt;/p&gt;
 
@@ -151,7 +152,7 @@ Blog.objects.select_related().defer(&quot;entry__headline&quot;, &quot;entry__bo
   &lt;/li&gt;
   &lt;li&gt;first and last&lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Aggregte:&lt;/p&gt;
+    &lt;p&gt;Aggregate:&lt;/p&gt;
 
     &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Book.objects.aggregate(Avg('price'), Max('price'), Min('price'))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
@@ -245,6 +246,35 @@ Parent.objects
         num=models.IntegerField()
     )
 )
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;WINDOW: Window functions provide a way to apply functions on partitions. Unlike a normal aggregation function which computes a final result for each set defined by the group by, window functions operate on &lt;a href=&quot;https://docs.djangoproject.com/en/2.0/ref/models/expressions/#window-frames&quot;&gt;frames&lt;/a&gt; and partitions, and compute the result for each row.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from django.db.models import Avg, F, RowRange, Window
+&amp;gt;&amp;gt;&amp;gt; from django.db.models.functions import ExtractYear
+&amp;gt;&amp;gt;&amp;gt; Movie.objects.annotate(
+&amp;gt;&amp;gt;&amp;gt;     avg_rating=Window(
+&amp;gt;&amp;gt;&amp;gt;         expression=Avg('rating'),
+&amp;gt;&amp;gt;&amp;gt;         partition_by=[F('studio'), F('genre')],
+&amp;gt;&amp;gt;&amp;gt;         order_by=ExtractYear('released').asc(),
+&amp;gt;&amp;gt;&amp;gt;         frame=RowRange(start=-2, end=2),
+&amp;gt;&amp;gt;&amp;gt;     ),
+&amp;gt;&amp;gt;&amp;gt; )
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;**Exists:**&lt;/code&gt; is a &lt;code class=&quot;highlighter-rouge&quot;&gt;Subquery&lt;/code&gt; subclass that uses an SQL &lt;code class=&quot;highlighter-rouge&quot;&gt;EXISTS&lt;/code&gt; statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.&lt;/p&gt;
+
+&lt;p&gt;For example, to annotate each post with whether or not it has a comment from within the last day:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from django.db.models import Exists, OuterRef
+&amp;gt;&amp;gt;&amp;gt; from datetime import timedelta
+&amp;gt;&amp;gt;&amp;gt; from django.utils import timezone
+&amp;gt;&amp;gt;&amp;gt; one_day_ago = timezone.now() - timedelta(days=1)
+&amp;gt;&amp;gt;&amp;gt; recent_comments = Comment.objects.filter(
+...     post=OuterRef('pk'),
+...     created_at__gte=one_day_ago,
+... )
+&amp;gt;&amp;gt;&amp;gt; Post.objects.annotate(recent_comment=Exists(recent_comments))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year&quot; title=&quot;https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year&quot;&gt;https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year&lt;/a&gt;&lt;/p&gt;
