@@ -4,7 +4,7 @@ undefined: Django quires cheat sheet and complex queires by example
 created_date: 2018-01-16 18:30:00 +0000
 date: 2018-01-28 01:34:06 +0000
 ---
-`QuerySet` can be constructed, filtered, sliced, and generally passed around without actually hitting the database. No database activity actually occurs until you do something to evaluate the queryset.
+ **Queryset** can be constructed, filtered, sliced, and generally passed around without actually hitting the database. No database activity actually occurs until you do something to evaluate the queryset.
 
 Querysets are evaluated when
 
@@ -246,6 +246,14 @@ more examples
     
     qs = qs.annotate(fullname=Concat(F('name'), Value(' '), F('surname')))\
                 .filter(fullname__icontains=textquery)
+
+If you want to write django queries try answering these questions in django ORM
+
+[http://a4academics.com/interview-questions/53-database-and-sql/397-top-100-database-sql-interview-questions-and-answers-examples-queries?showall=&start=2](http://a4academics.com/interview-questions/53-database-and-sql/397-top-100-database-sql-interview-questions-and-answers-examples-queries?showall=&start=2 "http://a4academics.com/interview-questions/53-database-and-sql/397-top-100-database-sql-interview-questions-and-answers-examples-queries?showall=&start=2")
+
+References:
+
+Django documentaion
 
 [https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year](https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year "https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year")
 
