@@ -1,6 +1,6 @@
 ---
 title: Django - Queries - Cheat sheet
-undefined: Django quires cheat sheet
+undefined: Django quires cheat sheet and complex queires by example
 created_date: 2018-01-16 18:30:00 +0000
 date: 2018-01-28 01:34:06 +0000
 ---
@@ -161,7 +161,40 @@ Querysets are evaluated when
       >>> newest = Comment.objects.filter(post=OuterRef('pk')).order_by('-created_at')
       >>> Post.objects.annotate(newest_commenter_email=Subquery(newest.values('email')[:1]))
 
-##### Learn queries:
+##### Learn COMPLEX queries by examples:
+
+    # Group by date
+    Log.objects.order_by().annotate(date=TruncDate('created_at')).values('date').annotate(c=Count('id'))
+
+    # Annotating Django querysets with ForeignKey Counts subject to conditions
+    
+    Airport.objects.filter(
+        Q(origins__owner=user) | Q(destinations__owner=user)
+    ).annotate(
+        num_origins=Count(
+            Case(When(Q(origin__owner=user), then=1, else=0)),
+        ),
+        num_destinations=Count(
+            Case(When(Q(destination__owner=user), then=1, else=0)),
+        )
+    )
+
+    # Aggrigate	
+    Feedback.objects.aggregate(avg_rating=Avg('rating'))
+
+    Parent.objects
+    .annotate(child_count=Count('child'))
+    .annotate(
+        grandchild_count_for_state_true=Subquery(
+            GrandChild.objects.filter(
+                state=True,
+                child=OuterRef('pk')
+            ).values('parent')
+            .annotate(cnt=Sum('child__grandchild__num'))
+            .values('cnt'),
+            num=models.IntegerField()
+        )
+    )
 
 [https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year](https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year "https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year")
 
