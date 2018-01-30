@@ -155,9 +155,16 @@ Querysets are evaluated when
 
       >>> from django.db.models import F
       >>> Entry.objects.filter(n_comments__gt=F('n_pingbacks'))
+* `Subquery()` expressions
+
+      >>> from django.db.models import OuterRef, Subquery
+      >>> newest = Comment.objects.filter(post=OuterRef('pk')).order_by('-created_at')
+      >>> Post.objects.annotate(newest_commenter_email=Subquery(newest.values('email')[:1]))
 
 ##### Learn queries:
 
 [https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year](https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year "https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year")
+
+[https://stackoverflow.com/questions/48301339/group-by-each-date-in-django-2](https://stackoverflow.com/questions/48301339/group-by-each-date-in-django-2 "https://stackoverflow.com/questions/48301339/group-by-each-date-in-django-2")
 
 [https://stackoverflow.com/questions/tagged/django-queryset](https://stackoverflow.com/questions/tagged/django-queryset "https://stackoverflow.com/questions/tagged/django-queryset")
