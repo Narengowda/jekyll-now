@@ -15,7 +15,7 @@ pages:
 hide_body: false
 fields:
 - type: text
-  default: Description
+  default: 'Description '
 - type: datetime
   default: 2018-01-16 18:30:00 +0000
   label: created date
