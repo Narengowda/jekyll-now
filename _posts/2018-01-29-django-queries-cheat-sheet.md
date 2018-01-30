@@ -156,4 +156,6 @@ Querysets are evaluated when
       >>> from django.db.models import F
       >>> Entry.objects.filter(n_comments__gt=F('n_pingbacks'))
 
-### Field lookups:
+##### Learn queries:
+
+[https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year](https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year "https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year")
