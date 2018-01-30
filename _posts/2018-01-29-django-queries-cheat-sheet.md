@@ -118,11 +118,12 @@ Querysets are evaluated when
 * bulk_create
 * count
 * in_bulk: to get multiple entries in bulk
+* **OuterRef:** Use `OuterRef` when a queryset in a `Subquery` needs to refer to a field from the outer query. It acts like an `[F](https://docs.djangoproject.com/en/2.0/ref/models/expressions/#django.db.models.F "django.db.models.F")` expression except that the check to see if it refers to a valid field isn’t made until the outer queryset is resolved.
 * Latest
 
       Entry.objects.latest('pub_date', '-expire_date')
 * first and last
-* Aggregte:
+* Aggregate:
 
        Book.objects.aggregate(Avg('price'), Max('price'), Min('price'))
 * Annotate
@@ -165,7 +166,7 @@ Querysets are evaluated when
 
     # Group by date
     Log.objects.order_by().annotate(date=TruncDate('created_at')).values('date').annotate(c=Count('id'))
-
+    
     # Annotating Django querysets with ForeignKey Counts subject to conditions
     
     Airport.objects.filter(
@@ -178,10 +179,10 @@ Querysets are evaluated when
             Case(When(Q(destination__owner=user), then=1, else=0)),
         )
     )
-
+    
     # Aggrigate	
     Feedback.objects.aggregate(avg_rating=Avg('rating'))
-
+    
     Parent.objects
     .annotate(child_count=Count('child'))
     .annotate(
@@ -195,6 +196,33 @@ Querysets are evaluated when
             num=models.IntegerField()
         )
     )
+
+WINDOW: Window functions provide a way to apply functions on partitions. Unlike a normal aggregation function which computes a final result for each set defined by the group by, window functions operate on [frames](https://docs.djangoproject.com/en/2.0/ref/models/expressions/#window-frames) and partitions, and compute the result for each row.
+
+    >>> from django.db.models import Avg, F, RowRange, Window
+    >>> from django.db.models.functions import ExtractYear
+    >>> Movie.objects.annotate(
+    >>>     avg_rating=Window(
+    >>>         expression=Avg('rating'),
+    >>>         partition_by=[F('studio'), F('genre')],
+    >>>         order_by=ExtractYear('released').asc(),
+    >>>         frame=RowRange(start=-2, end=2),
+    >>>     ),
+    >>> )
+
+`**Exists:**` is a `Subquery` subclass that uses an SQL `EXISTS` statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.
+
+For example, to annotate each post with whether or not it has a comment from within the last day:
+
+    >>> from django.db.models import Exists, OuterRef
+    >>> from datetime import timedelta
+    >>> from django.utils import timezone
+    >>> one_day_ago = timezone.now() - timedelta(days=1)
+    >>> recent_comments = Comment.objects.filter(
+    ...     post=OuterRef('pk'),
+    ...     created_at__gte=one_day_ago,
+    ... )
+    >>> Post.objects.annotate(recent_comment=Exists(recent_comments))
 
 [https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year](https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year "https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year")
 
