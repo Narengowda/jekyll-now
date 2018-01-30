@@ -210,7 +210,7 @@ WINDOW: Window functions provide a way to apply functions on partitions. Unlike 
     >>>     ),
     >>> )
 
-`**Exists:**` is a `Subquery` subclass that uses an SQL `EXISTS` statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.
+`**Exists:**`is a `Subquery` subclass that uses an SQL `EXISTS` statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.
 
 For example, to annotate each post with whether or not it has a comment from within the last day:
 
@@ -223,6 +223,29 @@ For example, to annotate each post with whether or not it has a comment from wit
     ...     created_at__gte=one_day_ago,
     ... )
     >>> Post.objects.annotate(recent_comment=Exists(recent_comments))
+
+`Exists` is a `Subquery` subclass that uses an SQL `EXISTS` statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.
+
+For example, to annotate each post with whether or not it has a comment from within the last day:
+
+    >>> from django.db.models import Exists, OuterRef
+    >>> from datetime import timedelta
+    >>> from django.utils import timezone
+    >>> one_day_ago = timezone.now() - timedelta(days=1)
+    >>> recent_comments = Comment.objects.filter(
+    ...     post=OuterRef('pk'),
+    ...     created_at__gte=one_day_ago,
+    ... )
+    >>> Post.objects.annotate(recent_comment=Exists(recent_comments))
+    
+
+more examples
+
+    from django.db.models.functions import Concat
+    from django.db.models import F, Value
+    
+    qs = qs.annotate(fullname=Concat(F('name'), Value(' '), F('surname')))\
+                .filter(fullname__icontains=textquery)
 
 [https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year](https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year "https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year")
 
