@@ -262,7 +262,7 @@ Parent.objects
 &gt;&gt;&gt; )
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">**Exists:**</code> is a <code class="highlighter-rouge">Subquery</code> subclass that uses an SQL <code class="highlighter-rouge">EXISTS</code> statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.</p>
+<p><code class="highlighter-rouge">**Exists:**</code>is a <code class="highlighter-rouge">Subquery</code> subclass that uses an SQL <code class="highlighter-rouge">EXISTS</code> statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.</p>
 
 <p>For example, to annotate each post with whether or not it has a comment from within the last day:</p>
 
@@ -275,6 +275,30 @@ Parent.objects
 ...     created_at__gte=one_day_ago,
 ... )
 &gt;&gt;&gt; Post.objects.annotate(recent_comment=Exists(recent_comments))
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Exists</code> is a <code class="highlighter-rouge">Subquery</code> subclass that uses an SQL <code class="highlighter-rouge">EXISTS</code> statement. In many cases it will perform better than a subquery since the database is able to stop evaluation of the subquery when a first matching row is found.</p>
+
+<p>For example, to annotate each post with whether or not it has a comment from within the last day:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; from django.db.models import Exists, OuterRef
+&gt;&gt;&gt; from datetime import timedelta
+&gt;&gt;&gt; from django.utils import timezone
+&gt;&gt;&gt; one_day_ago = timezone.now() - timedelta(days=1)
+&gt;&gt;&gt; recent_comments = Comment.objects.filter(
+...     post=OuterRef('pk'),
+...     created_at__gte=one_day_ago,
+... )
+&gt;&gt;&gt; Post.objects.annotate(recent_comment=Exists(recent_comments))
+</code></pre></div></div>
+
+<p>more examples</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from django.db.models.functions import Concat
+from django.db.models import F, Value
+
+qs = qs.annotate(fullname=Concat(F('name'), Value(' '), F('surname')))\
+            .filter(fullname__icontains=textquery)
 </code></pre></div></div>
 
 <p><a href="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year" title="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year">https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year</a></p>
