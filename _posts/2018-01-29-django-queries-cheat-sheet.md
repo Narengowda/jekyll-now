@@ -159,3 +159,5 @@ Querysets are evaluated when
 ##### Learn queries:
 
 [https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year](https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year "https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year")
+
+[https://stackoverflow.com/questions/tagged/django-queryset](https://stackoverflow.com/questions/tagged/django-queryset "https://stackoverflow.com/questions/tagged/django-queryset")
