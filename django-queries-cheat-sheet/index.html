@@ -1,4 +1,4 @@
-<p><code class="highlighter-rouge">QuerySet</code> can be constructed, filtered, sliced, and generally passed around without actually hitting the database. No database activity actually occurs until you do something to evaluate the queryset.</p>
+<p><strong>Queryset</strong> can be constructed, filtered, sliced, and generally passed around without actually hitting the database. No database activity actually occurs until you do something to evaluate the queryset.</p>
 
 <p>Querysets are evaluated when</p>
 
@@ -300,6 +300,14 @@ from django.db.models import F, Value
 qs = qs.annotate(fullname=Concat(F('name'), Value(' '), F('surname')))\
             .filter(fullname__icontains=textquery)
 </code></pre></div></div>
+
+<p>If you want to write django queries try answering these questions in django ORM</p>
+
+<p><a href="http://a4academics.com/interview-questions/53-database-and-sql/397-top-100-database-sql-interview-questions-and-answers-examples-queries?showall=&amp;start=2" title="http://a4academics.com/interview-questions/53-database-and-sql/397-top-100-database-sql-interview-questions-and-answers-examples-queries?showall=&amp;start=2">http://a4academics.com/interview-questions/53-database-and-sql/397-top-100-database-sql-interview-questions-and-answers-examples-queries?showall=&amp;start=2</a></p>
+
+<p>References:</p>
+
+<p>Django documentaion</p>
 
 <p><a href="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year" title="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year">https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year</a></p>
 
