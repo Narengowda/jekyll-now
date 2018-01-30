@@ -201,10 +201,20 @@ Poll.objects.get(
 &gt;&gt;&gt; Entry.objects.filter(n_comments__gt=F('n_pingbacks'))
 </code></pre></div>    </div>
   </li>
+  <li>
+    <p><code class="highlighter-rouge">Subquery()</code> expressions</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; from django.db.models import OuterRef, Subquery
+&gt;&gt;&gt; newest = Comment.objects.filter(post=OuterRef('pk')).order_by('-created_at')
+&gt;&gt;&gt; Post.objects.annotate(newest_commenter_email=Subquery(newest.values('email')[:1]))
+</code></pre></div>    </div>
+  </li>
 </ul>
 
 <h5 id="learn-queries">Learn queries:</h5>
 
 <p><a href="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year" title="https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year">https://stackoverflow.com/questions/8746014/django-group-by-date-day-month-year</a></p>
+
+<p><a href="https://stackoverflow.com/questions/48301339/group-by-each-date-in-django-2" title="https://stackoverflow.com/questions/48301339/group-by-each-date-in-django-2">https://stackoverflow.com/questions/48301339/group-by-each-date-in-django-2</a></p>
 
 <p><a href="https://stackoverflow.com/questions/tagged/django-queryset" title="https://stackoverflow.com/questions/tagged/django-queryset">https://stackoverflow.com/questions/tagged/django-queryset</a></p>
