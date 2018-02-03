@@ -12,7 +12,6 @@ This notes shows how to implement Convolutional Neural  Networks (CNNs) in Pytho
     # Ref: https://www.datacamp.com/community/tutorials/convolutional-neural-networks-python
     from keras.datasets import fashion_mnist
     (train_X,train_Y), (test_X,test_Y) = fashion_mnist.load_data()
-    
 
     import numpy as np
     from keras.utils import to_categorical
