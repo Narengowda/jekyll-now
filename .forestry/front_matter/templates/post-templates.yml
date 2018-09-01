@@ -10,7 +10,6 @@ fields:
   label: created date
   name: created_date
 pages:
-- _posts/perceptron-in-20-lines-of-code.md
 - _posts/2018-01-20-logistic-regression-sms-spam-ham-classification-using-tfidf-vectorizer.md
 - _posts/2018-01-19-sms-spam-ham-classifier-using-naive-bayes-algorithm.md
 - test.md
