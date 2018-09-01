@@ -1,18 +1,7 @@
 ---
-pages:
-- test.md
-- _posts/2018-01-18-cnn-convolution-neural-networks-dress-recognition.md
-- _posts/2018-01-29-django-queries-cheat-sheet.md
-- _posts/2018-01-26-django-tips.md
-- _posts/2018-01-20-logistic-regression-sms-spam-ham-classification-using-tfidf-vectorizer.md
-- _posts/2018-01-19-sms-spam-ham-classifier-using-naive-bayes-algorithm.md
-- _posts/2018-01-17-handwritten-digit-recognition-using-logistic-regression.md
-- _posts/2018-01-17-predict-the-criminals-svm.md
-- _posts/2018-01-17-predict-the-criminals-machine-learning.md
-- _posts/2018-01-17-it-took-time-to-figure-out-pool-size-configuration-in-sqlalchemy.md
-- _posts/2018-01-17-two-ways-to-kill-processes-of-a-kind.md
-- _posts/2018-01-17-collection-of-python-tricks-for-faster-and-better-coding.md
+label: post templates
 hide_body: false
+is_partial: false
 fields:
 - type: text
   default: 'Description '
@@ -20,3 +9,17 @@ fields:
   default: 2018-01-16 18:30:00 +0000
   label: created date
   name: created_date
+pages:
+- _posts/perceptron-in-20-lines-of-code.md
+- _posts/2018-01-20-logistic-regression-sms-spam-ham-classification-using-tfidf-vectorizer.md
+- _posts/2018-01-19-sms-spam-ham-classifier-using-naive-bayes-algorithm.md
+- test.md
+- _posts/2018-01-26-django-tips.md
+- _posts/2018-01-17-it-took-time-to-figure-out-pool-size-configuration-in-sqlalchemy.md
+- _posts/2018-01-17-predict-the-criminals-svm.md
+- _posts/2018-01-18-cnn-convolution-neural-networks-dress-recognition.md
+- _posts/2018-01-17-predict-the-criminals-machine-learning.md
+- _posts/2018-01-17-two-ways-to-kill-processes-of-a-kind.md
+- _posts/2018-01-17-collection-of-python-tricks-for-faster-and-better-coding.md
+- _posts/2018-01-17-handwritten-digit-recognition-using-logistic-regression.md
+- _posts/2018-01-29-django-queries-cheat-sheet.md
